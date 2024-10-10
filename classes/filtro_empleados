@@ -1,0 +1,118 @@
+<?php
+// Simulación de conexión a la base de datos
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+$empleado = null;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $cedula = $_POST['cedula'];
+    
+    // Consulta SQL para buscar el empleado por cédula
+    $sql = "SELECT * FROM empleados WHERE cedula = '$cedula'";
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows > 0) {
+        $empleado = $result->fetch_assoc();
+    }
+}
+
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Empleados</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Roboto;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1{
+            font-family: Poppins;
+            color: #000000;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button{
+            color: white;
+            background-color: #1d75e9;
+        }
+        button:hover{
+            color: white;
+            background-color: #03316d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Buscar empleados</h1>
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <input type="text" name="cedula" placeholder="Ingrese la cédula" required>
+        <button type="submit">Buscar</button>
+    </form>
+
+    <?php if ($empleado): ?>
+        <h2>Información del Empleado</h2>
+        <table>
+            <tr>
+                <th>Campo</th>
+                <th>Valor</th>
+            </tr>
+            <tr><td>Nombre</td><td><?php echo $empleado['nombre']; ?></td></tr>
+            <tr><td>Segundo Nombre</td><td><?php echo $empleado['segundoNombre']; ?></td></tr>
+            <tr><td>Primer Apellido</td><td><?php echo $empleado['primerApellido']; ?></td></tr>
+            <tr><td>Segundo Apellido</td><td><?php echo $empleado['segundoApellido']; ?></td></tr>
+            <tr><td>Cédula</td><td><?php echo $empleado['cedula']; ?></td></tr>
+            <tr><td>Turno</td><td><?php echo $empleado['turno']; ?></td></tr>
+            <tr><td>Departamento</td><td><?php echo $empleado['departamento']; ?></td></tr>
+            <tr><td>Provincia</td><td><?php echo $empleado['provincia']; ?></td></tr>
+            <tr><td>Distrito</td><td><?php echo $empleado['distrito']; ?></td></tr>
+            <tr><td>Corregimiento</td><td><?php echo $empleado['corregimiento']; ?></td></tr>
+            <tr><td>Correo</td><td><?php echo $empleado['correo']; ?></td></tr>
+            <tr><td>Teléfono</td><td><?php echo $empleado['telefono']; ?></td></tr>
+            <tr><td>Salario Inicial</td><td><?php echo $empleado['salarioInicial']; ?></td></tr>
+            <tr><td>Salario por Hora</td><td><?php echo $empleado['salarioHora']; ?></td></tr>
+            <tr><td>Salario Bruto</td><td><?php echo $empleado['salarioBruto']; ?></td></tr>
+            <tr><td>Salario Neto</td><td><?php echo $empleado['salarioNeto']; ?></td></tr>
+            <tr><td>Descuento</td><td><?php echo $empleado['descuento']; ?></td></tr>
+            <tr><td>Bonos</td><td><?php echo $empleado['bonos']; ?></td></tr>
+            <tr><td>Número de Planilla</td><td><?php echo $empleado['nPlanilla']; ?></td></tr>
+        </table>
+    <?php elseif ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
+        <p>No se encontró ningún empleado con la cédula proporcionada.</p>
+    <?php endif; ?>
+</body>
+</html>
