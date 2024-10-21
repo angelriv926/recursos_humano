@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provincias</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .selection-info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selección de Ubicación en Panamá</h1>
+    
+    <label for="provincia">Provincia:</label>
+    <select id="provincia">
+        <option value="">Seleccione una provincia</option>
+    </select>
+
+    <label for="distrito">Distrito:</label>
+    <select id="distrito" disabled>
+        <option value="">Seleccione un distrito</option>
+    </select>
+
+    <label for="corregimiento">Corregimiento:</label>
+    <select id="corregimiento" disabled>
+        <option value="">Seleccione un corregimiento</option>
+    </select>
+
+    <div id="selectionInfo" class="selection-info"></div>
+
+    <script>
+        const data = {
+            "Bocas del Toro": {
+                "Bocas del Toro": ["Bocas del Toro", "Bastimentos", "Cauchero", "Carenero", "Solarte", "Cristóbal"],
+                "Changuinola": ["Changuinola", "El Silencio", "San Francisco", "San Pedro", "La Loma", "Almirante", "Guabito"],
+                "Almirante": ["Almirante", "La Feria", "La Gloria", "La Bejuquera"],
+                "Isla Colón": ["Isla Colón", "Boca del Drago", "Finca de Cacao", "Punta Laurel"]
+            },
+            "Coclé": {
+                "Aguadulce": ["Aguadulce", "El Cristo", "El Roble"],
+                "Antón": ["Antón", "El Valle de Antón", "Río Hato", "Santa Clara", "San José"],
+                "La Pintada": ["La Pintada", "El Harino", "La Florida", "San Juan de Dios", "Santa Rita"],
+                "Natá": ["Natá", "La Ciénaga", "La Guaira", "Llano de la Cruz", "San Francisco"],
+                "Penonomé": ["Penonomé", "El Chorro", "Las Minas", "San Carlos"]
+            },
+            "Colón": {
+                "Colón": ["Colón", "Cristóbal", "Sabanitas", "Nuevo Colón", "San Juan"],
+                "Cristóbal": ["Cristóbal", "Tierra Oscura", "Cativá"],
+                "Chagres": ["Chagres", "Cienaguita", "San Juan"],
+                "Santa Isabel": ["Santa Isabel", "La Boca", "La Guaira"],
+                "Portobelo": ["Portobelo", "El Guacho", "La Pita", "Playa Chiquita"]
+            },
+            "Chiriquí": {
+                "David": ["David", "Bijagual", "Cochea", "Las Lomas", "El Terronal", "Río Sereno", "San Pablo"],
+                "Boquete": ["Bajo Boquete", "Alto Boquete", "Jaramillo", "Palmira", "Caldera", "Volcán"],
+                "Bugaba": ["El Cebú", "La Estrella", "San Isidro", "San Juan"],
+                "Dolega": ["Dolega", "Potrerillos", "Las Lomas", "El Cacao"],
+                "Gualaca": ["Gualaca", "La Meseta", "Los Famosos", "Cerro Punta"],
+                "Renacimiento": ["Renacimiento", "Ciri Grande", "La Cuchilla"],
+                "Tierras Altas": ["Tierras Altas", "Cerro Punta", "Volcán"],
+                "Alanje": ["Alanje", "Las Lajas", "La Victoria"]
+            },
+            "Darién": {
+                "Darién": ["Darién", "La Palma", "Santa Fe", "San Miguel", "Piriatí", "Cañita", "El Cangrejo"],
+                "Chepigana": ["Chepigana", "El Real", "Metetí", "La Cangrejera", "Camoganti", "Garachiné", "Piriatí Arriba"],
+                "Pinogana": ["El Real de Santa María", "Pinogana", "Garachine", "El Tigre", "Cañaza", "Río Congo", "Boca de Cupe", "Paya", "Taimati"],
+                "Tucutí": ["Tucutí", "Cañaveral", "La Balsa"]
+            },
+            "Herrera": {
+                "Chitré": ["Chitré", "La Arena", "Monagrillo", "El Cocal", "San Juan Bautista"],
+                "Los Pozos": ["Los Pozos", "El Capurí", "Las Llanas"],
+                "Las Minas": ["Las Minas", "El Espiral", "La Florida", "San Juan"],
+                "Ocú": ["Ocú", "El Hato", "La Capilla", "San José de Ocú"],
+                "Parita": ["Parita", "El Macano", "La Palma", "San Pedro"],
+                "Guararé": ["Guararé", "El Bongo", "La Miel"],
+            },
+            "Los Santos": {
+                "Las Tablas": ["Las Tablas", "El Carate", "La Palma", "El Cacao", "La Laja", "San Francisco"],
+                "Guararé": ["Guararé", "El Espinal", "Guararé Arriba", "El Bongo", "La Miel", "San José"],
+                "Pedasí": ["Pedasí", "El Toro", "La Cañaza", "Los Destiladeros", "Playa Venao"],
+                "Pocrí": ["Pocrí", "El Salado", "La Villa", "Llano de la Cruz"],
+                "Las Minas": ["Las Minas", "El Espiral", "La Florida", "San Juan"]
+            },
+            "Panamá": {
+                "Chepo": ["Chepo", "El Llano", "Las Minas", "La Mesa", "San Bartolomé", "San Juan de Dios"],
+                "Panamá": ["Tocumen", "Las Mañanitas", "San Martín", "Parque Lefevre", "24 de diciembre", "La Siesta", "San Felipe", "El Chorrillo", "Santa Ana"],
+                "San Miguelito": ["Amelia Denis de Icaza", "Belisario Porras", "José Domingo Espinar"],
+                "Donoso": ["Donoso", "El Bongo", "La Envidia", "La Peña", "Las Trancas"],
+                "Santa María": ["Santa María", "El Cacao", "El Salado"]
+            },
+            "Panamá Oeste": {
+                "La Chorrera": ["Barrio Balboa", "Barrio Colón", "El Coco", "Cerro Caro", "Chamelecón", "San Francisco de La Chorrera"],
+                "Arraiján": ["Burunga", "El Tecal", "Nuevo Arraiján", "Villa Lucre", "Burunga", "Cerro Silvestre", "Juan Demóstenes Arosemena"],
+                "Capira": ["Capira", "La Chorrera", "San Juan", "Santa Rosa"],
+                "San Carlos": ["San Carlos", "Bejuco", "Río Mar"]
+            },
+            "Veraguas": {
+                "Santiago": ["Santiago", "La Mesa", "Las Palmas", "San Juan"],
+                "Soná": ["Soná", "Cativé", "El Marañón"],
+                "Veraguas": ["Veraguas", "El Hato", "La Estrella", "Santa Fé"],
+                "San Francisco": ["San Francisco", "La Trinidad", "Pajarito"],
+                "Cañazas": ["Cañazas", "El Porvenir", "La Peña", "Los Naranjos"],
+                "La Villa de los Santos": ["La Villa de Los Santos", "El Cañón", "La Anegada"],
+                "Montijo": ["Montijo", "Boca de Monte", "La Riconada", "San Pablo"]
+            }
+        };
+
+        const provinciaSelect = document.getElementById('provincia');
+        const distritoSelect = document.getElementById('distrito');
+        const corregimientoSelect = document.getElementById('corregimiento');
+        const selectionInfo = document.getElementById('selectionInfo');
+
+        // Select de provincias
+        for (const provincia in data) {
+            const option = document.createElement('option');
+            option.value = provincia;
+            option.textContent = provincia;
+            provinciaSelect.appendChild(option);
+        }
+
+        // Actualizar distritos cuando eliges una provincia xd
+        provinciaSelect.addEventListener('change', function() {
+            distritoSelect.innerHTML = '<option value="">Seleccione un distrito</option>';
+            corregimientoSelect.innerHTML = '<option value="">Seleccione un corregimiento</option>';
+            
+            if (this.value) {
+                distritoSelect.disabled = false;
+                for (const distrito in data[this.value]) {
+                    const option = document.createElement('option');
+                    option.value = distrito;
+                    option.textContent = distrito;
+                    distritoSelect.appendChild(option);
+                }
+            } else {
+                distritoSelect.disabled = true;
+                corregimientoSelect.disabled = true;
+            }
+            updateSelectionInfo();
+        });
+
+        // Ese es pa actualizar corregimientos acorde a la selección 
+        distritoSelect.addEventListener('change', function() {
+            corregimientoSelect.innerHTML = '<option value="">Seleccione un corregimiento</option>';
+            
+            if (this.value) {
+                corregimientoSelect.disabled = false;
+                const corregimientos = data[provinciaSelect.value][this.value];
+                corregimientos.forEach(corregimiento => {
+                    const option = document.createElement('option');
+                    option.value = corregimiento;
+                    option.textContent = corregimiento;
+                    corregimientoSelect.appendChild(option);
+                });
+            } else {
+                corregimientoSelect.disabled = true;
+            }
+            updateSelectionInfo();
+        });
+
+        // Actualizar la info cuando se selecciona otro corregimiento
+        corregimientoSelect.addEventListener('change', updateSelectionInfo);
+    </script>
+</body>
+</html>
